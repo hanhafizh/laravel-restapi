@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\TodolistResource;
 use App\Models\Todolist;
+use Exception;
 use Illuminate\Http\Request;
 
 class TodolistController extends Controller
@@ -23,7 +24,22 @@ class TodolistController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'title' => 'required|min:3|max:255',
+            'desc' => 'required|min:3|max:255',
+            'is_done' => 'required|in:0,1',
+        ]);
+
+        try {
+            $todolist = Todolist::create($data);
+
+            return response()->json([
+                'message' => 'Todolist created sucessfully',
+                'data' => new TodolistResource($todolist)
+            ], 201);
+        } catch (Exception $error) {
+            return response()->json(['message' => 'Todolist created failed'], 500);
+        }
     }
 
     /**
