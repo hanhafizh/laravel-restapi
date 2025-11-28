@@ -61,7 +61,28 @@ class TodolistController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $data = $request->validate([
+            'title' => 'required|min:3|max:255',
+            'desc' => 'required|min:3|max:255',
+            'is_done' => 'required|in:0,1',
+        ]);
+
+        $todolist = Todolist::find($id);
+
+        if ($todolist == null) {
+            return response()->json(['message' => 'Todolist not found'], 404);
+        }
+
+        try {
+            $todolist->update($data);
+
+            return response()->json([
+                'message' => 'Todolist updated sucessfully',
+                'data' => new TodolistResource($todolist)
+            ], 200);
+        } catch (Exception $error) {
+            return response()->json(['message' => 'Todolist updated failed'], 500);
+        }
     }
 
     /**
