@@ -16,6 +16,7 @@ class TodolistResource extends JsonResource
     {
         return
             [
+                'id' => $this->id,
                 'title' => $this->title,
                 'desc' => $this->desc,
                 'is_done' => $this->is_done ? true : false

@@ -90,6 +90,20 @@ class TodolistController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $todolist = Todolist::find($id);
+
+        if ($todolist == null) {
+            return response()->json(['message' => 'Todolist not found'], 404);
+        }
+
+        try {
+            $todolist->delete();
+
+            return response()->json([
+                'message' => 'Todolist deleted sucessfully',
+            ], 200);
+        } catch (Exception $error) {
+            return response()->json(['message' => 'Todolist deleted failed'], 500);
+        }
     }
 }
