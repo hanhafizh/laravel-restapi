@@ -47,7 +47,13 @@ class TodolistController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $todolist = Todolist::find($id);
+
+        if ($todolist == null) {
+            return response()->json(['message' => 'Todolist not found'], 404);
+        }
+
+        return new TodolistResource($todolist);
     }
 
     /**
